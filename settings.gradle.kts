@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Ble Sandbox"
+rootProject.name = "Ble-Sandbox"
 include(":app")
  
