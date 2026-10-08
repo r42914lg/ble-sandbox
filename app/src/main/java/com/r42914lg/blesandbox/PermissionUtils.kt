@@ -10,11 +10,6 @@ import androidx.core.content.ContextCompat
 
 object PermissionUtils {
 
-    /**
-     * Returns the list of runtime permissions required for BLE based on Android version.
-     * Android 12 (API 31)+ requires BLUETOOTH_SCAN and BLUETOOTH_CONNECT.
-     * Older devices (API 23..30) require ACCESS_FINE_LOCATION or ACCESS_COARSE_LOCATION.
-     */
     fun getRequiredPermissions(): Array<String> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(
@@ -29,19 +24,13 @@ object PermissionUtils {
         }
     }
 
-    /**
-     * Checks if all required runtime permissions are granted.
-     */
     fun hasRequiredPermissions(context: Context): Boolean {
         return getRequiredPermissions().all { permission ->
             ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
         }
     }
 
-    /**
-     * On Android 11 (API 30) and lower, Location Services (GPS or Network) must be enabled
-     * for BLE scanning to return scan results.
-     */
+    // on Android 11 (API 30) and lower -> Location Services (GPS or Network) must be enabled
     fun isLocationEnabled(context: Context): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             return true
@@ -52,9 +41,6 @@ object PermissionUtils {
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
-    /**
-     * Checks if Bluetooth is turned on on the device.
-     */
     fun isBluetoothEnabled(context: Context): Boolean {
         val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         val adapter = bluetoothManager?.adapter
