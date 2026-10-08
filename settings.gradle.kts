@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -9,7 +10,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        includeBuild("build-logic")
     }
 }
 plugins {
@@ -25,4 +25,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Ble-Sandbox"
 include(":app")
- 
+include(":ble-wrapper")

@@ -2,6 +2,7 @@ package com.r42914lg.blesandbox
 
 import android.app.Application
 import android.content.Context
+import com.r42914lg.blesandbox.blewrapper.di.BleInitializer
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.loadKoinModules
 import org.koin.core.context.startKoin
@@ -21,7 +22,8 @@ class BleSandboxApp : Application(), CoreApp {
             androidContext(getApplicationContext())
             loadKoinModules(
                 listOf(
-                    AppInitializer().module
+                    AppInitializer().module,
+                    BleInitializer().module
                 )
             )
         }
