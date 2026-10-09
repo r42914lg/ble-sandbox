@@ -45,13 +45,16 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
                     setNotificationCallback(char).with { _: BluetoothDevice, data: Data ->
                         parseTemperatureData(data)
                     }
-                    enableNotifications(char).enqueue()
+                    enableNotifications(char)
+                        .fail { _, status -> Log.w(TAG, "Failed to enable notifications: $status") }
+                        .enqueue()
                 }
 
                 ledCharacteristic?.let { char ->
-                    readCharacteristic(char).with { _: BluetoothDevice, data: Data ->
-                        parseLedData(data)
-                    }.enqueue()
+                    readCharacteristic(char)
+                        .with { _: BluetoothDevice, data: Data -> parseLedData(data) }
+                        .fail { _, status -> Log.w(TAG, "Failed to read initial LED state: $status") }
+                        .enqueue()
                 }
             }
 

@@ -110,13 +110,18 @@ class DeviceConnectionImpl(
                     isDeviceReady = false
                     _connectionState.value = DeviceConnectionState.Disconnected
                 } else if (isDeviceReady) {
-                    // signal lost
+                    // signal lost -> update UI to Reconnecting and trigger background auto-connect
                     val lastTempTimestamp = temperatureFlow.value?.timestampMs
                     _connectionState.value = DeviceConnectionState.Reconnecting(
                         deviceAddress = device.address,
                         deviceName = device.name ?: currentTargetName,
                         lastReadingTimestampMs = lastTempTimestamp
                     )
+                    // reconnect if in range
+                    bleManager.connect(device)
+                        .useAutoConnect(true)
+                        .retry(100, 1000)
+                        .enqueue()
                 } else {
                     // initial setup never succeeded
                     isDeviceReady = false
