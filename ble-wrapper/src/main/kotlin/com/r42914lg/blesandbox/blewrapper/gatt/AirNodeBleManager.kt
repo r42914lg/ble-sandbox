@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
+import android.util.Log
 import com.r42914lg.blesandbox.blewrapper.model.LedState
 import com.r42914lg.blesandbox.blewrapper.model.TemperatureReading
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import no.nordicsemi.android.ble.BleManager
 import no.nordicsemi.android.ble.data.Data
+
+private const val TAG = "AirNodeBleManager"
 
 class AirNodeBleManager(context: Context) : BleManager(context) {
 
@@ -28,13 +31,13 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
 
             override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
                 val service = gatt.getService(AirNodeGattAttributes.SERVICE_UUID)
-                return if (service != null) {
+                if (service != null) {
                     tempCharacteristic = service.getCharacteristic(AirNodeGattAttributes.TEMP_CHARACTERISTIC_UUID)
                     ledCharacteristic = service.getCharacteristic(AirNodeGattAttributes.LED_CHARACTERISTIC_UUID)
-                    true
-                } else {
-                    false
                 }
+                val supported = service != null && tempCharacteristic != null && ledCharacteristic != null
+                Log.d(TAG, "isRequiredServiceSupported=$supported for service ${AirNodeGattAttributes.SERVICE_UUID}")
+                return supported
             }
 
             override fun initialize() {
@@ -61,12 +64,10 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
 
     private fun parseTemperatureData(data: Data) {
         val bytes = data.value ?: return
-        if (bytes.isNotEmpty()) {
-            val tempValue = when {
-                bytes.size >= 4 -> data.getFloatValue(Data.FORMAT_FLOAT, 0) ?: 20.0f
-                bytes.size >= 2 -> (data.getIntValue(Data.FORMAT_SINT16, 0) ?: 200).toFloat() / 10f
-                else -> (bytes[0].toInt() and 0xFF).toFloat()
-            }
+        if (bytes.size >= 4) {
+            val hundredths = data.getIntValue(Data.FORMAT_SINT16, 2) ?: return
+            val tempValue = hundredths.toFloat() / 100.0f
+            Log.d(TAG, "Received temperature reading: $tempValue °C (hundredths=$hundredths)")
             _temperatureFlow.value = TemperatureReading(temperatureCelsius = tempValue)
         }
     }
@@ -76,6 +77,7 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
         if (bytes.isNotEmpty()) {
             val isOn = bytes[0].toInt() != 0
             val writeVal = if (isOn) "01" else "00"
+            Log.d(TAG, "Read LED state: isOn=$isOn, val=$writeVal")
             _ledStateFlow.value = LedState(
                 isOn = isOn,
                 lastWriteTimestampMs = System.currentTimeMillis(),
@@ -86,7 +88,7 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
 
     fun setLedState(isOn: Boolean) {
         val char = ledCharacteristic ?: return
-        val value = if (isOn) byteArrayOf(0x01) else byteArrayOf(0x00)
+        val value = byteArrayOf(if (isOn) 0x01 else 0x00)
         val hexValue = if (isOn) "01" else "00"
 
         writeCharacteristic(
@@ -94,6 +96,7 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
             value,
             BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
         ).done {
+            Log.d(TAG, "Successfully wrote LED state: $hexValue")
             _ledStateFlow.value = LedState(
                 isOn = isOn,
                 lastWriteTimestampMs = System.currentTimeMillis(),

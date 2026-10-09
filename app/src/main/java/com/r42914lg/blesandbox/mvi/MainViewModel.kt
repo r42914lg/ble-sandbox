@@ -36,7 +36,7 @@ class MainViewModel(
         )
     )
 
-    private val sheetExplicitOpenFlow = MutableStateFlow(false)
+    private val sheetExplicitOpenFlow = MutableStateFlow(true)
 
     private val contentStateFlow = combine(
         deviceConnection.connectionState,
@@ -71,16 +71,17 @@ class MainViewModel(
     private val sheetStateFlow = combine(
         readinessFlow,
         sheetExplicitOpenFlow,
-        contentStateFlow,
         deviceConnection.discoveredDevices
-    ) { readiness, isSheetOpen, content, devices ->
+    ) { readiness, isSheetOpen, devices ->
         when {
             !readiness.isSetupComplete -> BottomSheetState.SetupRequired(
                 isPermissionsGranted = readiness.isPermissionsGranted,
                 isLocationEnabled = readiness.isLocationEnabled,
                 isBluetoothEnabled = readiness.isBluetoothEnabled
             )
-            isSheetOpen || content is MainContentState.NoDevice -> BottomSheetState.DevicePicker(devices)
+            isSheetOpen -> BottomSheetState.DevicePicker(
+                devices.filter { it.name.contains("AirNode-C3") }
+            )
             else -> BottomSheetState.Hidden
         }
     }.onEach { sheet ->
