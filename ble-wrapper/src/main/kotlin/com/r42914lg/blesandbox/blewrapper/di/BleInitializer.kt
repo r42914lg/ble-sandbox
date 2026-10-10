@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 class BleInitializer {
     val module = module {
-        single<DeviceConnection> { DeviceConnectionImpl(context = get()) }
+        single<DeviceConnection> { DeviceConnectionImpl(context = get(), repository = get()) }
     }
 }

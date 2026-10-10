@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/ble-wrapper" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention-plugins" />
+            <option value="$PROJECT_DIR$/core-data" />
           </set>
         </option>
       </GradleProjectSettings>

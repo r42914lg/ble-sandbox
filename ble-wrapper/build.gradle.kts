@@ -7,6 +7,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core-data"))
+
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)

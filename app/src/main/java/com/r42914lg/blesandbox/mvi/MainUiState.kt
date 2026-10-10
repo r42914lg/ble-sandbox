@@ -1,8 +1,8 @@
 package com.r42914lg.blesandbox.mvi
 
 import com.r42914lg.blesandbox.blewrapper.model.DiscoveredDevice
-import com.r42914lg.blesandbox.blewrapper.model.LedState
-import com.r42914lg.blesandbox.blewrapper.model.TemperatureReading
+import com.r42914lg.blesandbox.coredata.model.LedStateRecord
+import com.r42914lg.blesandbox.coredata.model.TemperatureRecord
 
 sealed interface MainContentState {
     data object NoDevice : MainContentState
@@ -15,15 +15,15 @@ sealed interface MainContentState {
     data class Connected(
         val deviceAddress: String,
         val deviceName: String,
-        val temperature: TemperatureReading?,
-        val ledState: LedState
+        val temperature: TemperatureRecord?,
+        val ledState: LedStateRecord
     ) : MainContentState
 
     data class Reconnecting(
         val deviceAddress: String,
         val deviceName: String,
-        val lastTemperature: TemperatureReading?,
-        val ledState: LedState
+        val lastTemperature: TemperatureRecord?,
+        val ledState: LedStateRecord
     ) : MainContentState
 
     data class Error(

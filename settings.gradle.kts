@@ -26,3 +26,4 @@ dependencyResolutionManagement {
 rootProject.name = "Ble-Sandbox"
 include(":app")
 include(":ble-wrapper")
+include(":core-data")

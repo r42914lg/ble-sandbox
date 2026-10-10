@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.r42914lg.blesandbox.PermissionUtils
 import com.r42914lg.blesandbox.blewrapper.DeviceConnection
 import com.r42914lg.blesandbox.blewrapper.model.DeviceConnectionState
+import com.r42914lg.blesandbox.coredata.AirNodeRepository
+import com.r42914lg.blesandbox.coredata.model.LedStateRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +27,7 @@ data class ReadinessState(
 
 class MainViewModel(
     private val deviceConnection: DeviceConnection,
+    private val repository: AirNodeRepository,
     context: Context
 ) : ViewModel() {
 
@@ -40,8 +43,8 @@ class MainViewModel(
 
     private val contentStateFlow = combine(
         deviceConnection.connectionState,
-        deviceConnection.temperatureFlow,
-        deviceConnection.ledStateFlow
+        repository.observeLatestTemperature(),
+        repository.observeLedState()
     ) { connState, temp, led ->
         when (connState) {
             is DeviceConnectionState.Disconnected -> MainContentState.NoDevice
@@ -53,13 +56,13 @@ class MainViewModel(
                 deviceAddress = connState.deviceAddress,
                 deviceName = connState.deviceName ?: "AirNode",
                 temperature = temp,
-                ledState = led
+                ledState = led ?: LedStateRecord()
             )
             is DeviceConnectionState.Reconnecting -> MainContentState.Reconnecting(
                 deviceAddress = connState.deviceAddress,
                 deviceName = connState.deviceName ?: "AirNode",
                 lastTemperature = temp,
-                ledState = led
+                ledState = led ?: LedStateRecord()
             )
             is DeviceConnectionState.Error -> MainContentState.Error(
                 message = connState.message,

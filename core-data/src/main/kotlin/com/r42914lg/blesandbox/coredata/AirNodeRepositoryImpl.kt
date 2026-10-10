@@ -1,0 +1,45 @@
+package com.r42914lg.blesandbox.coredata
+
+import com.r42914lg.blesandbox.coredata.db.dao.LedStateDao
+import com.r42914lg.blesandbox.coredata.db.dao.TemperatureDao
+import com.r42914lg.blesandbox.coredata.db.entity.LedStateEntity
+import com.r42914lg.blesandbox.coredata.db.entity.TemperatureEntity
+import com.r42914lg.blesandbox.coredata.model.LedStateRecord
+import com.r42914lg.blesandbox.coredata.model.TemperatureRecord
+import com.r42914lg.blesandbox.coredata.model.toRecordList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class AirNodeRepositoryImpl(
+    private val temperatureDao: TemperatureDao,
+    private val ledStateDao: LedStateDao
+) : AirNodeRepository {
+
+    override suspend fun saveTemperature(
+        temperatureCelsius: Float,
+        timestampMs: Long
+    ) {
+        val entity = TemperatureEntity(
+            temperatureCelsius = temperatureCelsius,
+            timestampMs = timestampMs
+        )
+        temperatureDao.insert(entity)
+    }
+
+    override suspend fun saveLedState(isOn: Boolean) {
+        val entity = LedStateEntity(isOn = isOn)
+        ledStateDao.insert(entity)
+    }
+
+    override fun observeLatestTemperature(): Flow<TemperatureRecord?> {
+        return temperatureDao.observeLatest().map { it?.toRecord() }
+    }
+
+    override fun observeAllTemperatures(): Flow<List<TemperatureRecord>> {
+        return temperatureDao.observeAll().map { it.toRecordList() }
+    }
+
+    override fun observeLedState(): Flow<LedStateRecord?> {
+        return ledStateDao.observeLatest().map { it?.toRecord() }
+    }
+}

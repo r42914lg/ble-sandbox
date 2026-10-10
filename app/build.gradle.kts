@@ -34,6 +34,7 @@ android {
 
 dependencies {
     implementation(project(":ble-wrapper"))
+    implementation(project(":core-data"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

@@ -47,8 +47,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.r42914lg.blesandbox.PermissionUtils
-import com.r42914lg.blesandbox.blewrapper.model.LedState
-import com.r42914lg.blesandbox.blewrapper.model.TemperatureReading
+import com.r42914lg.blesandbox.coredata.model.LedStateRecord
+import com.r42914lg.blesandbox.coredata.model.TemperatureRecord
 import com.r42914lg.blesandbox.mvi.BottomSheetState
 import com.r42914lg.blesandbox.mvi.MainContentState
 import com.r42914lg.blesandbox.mvi.MainScreenAction
@@ -164,7 +164,7 @@ fun MainScreenContent(
                             deviceName = content.deviceName,
                             deviceAddress = content.deviceAddress,
                             temperature = null,
-                            ledState = LedState(),
+                            ledState = LedStateRecord(),
                             isConnecting = true,
                             isReconnecting = false,
                             onToggleLed = onToggleLed,
@@ -254,8 +254,8 @@ fun EmptyStateView(onOpenSheet: () -> Unit) {
 fun ActiveDeviceView(
     deviceName: String,
     deviceAddress: String,
-    temperature: TemperatureReading?,
-    ledState: LedState,
+    temperature: TemperatureRecord?,
+    ledState: LedStateRecord,
     isConnecting: Boolean,
     isReconnecting: Boolean,
     onToggleLed: (Boolean) -> Unit,

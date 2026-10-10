@@ -7,6 +7,6 @@ import org.koin.dsl.module
 class AppInitializer {
     val module = module {
         single<CoreApp> { BleSandboxApp() }
-        viewModel { MainViewModel(get(), get()) }
+        viewModel { MainViewModel(get(), get(), get()) }
     }
 }

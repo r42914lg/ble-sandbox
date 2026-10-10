@@ -11,8 +11,7 @@ import android.util.Log
 import com.r42914lg.blesandbox.blewrapper.gatt.AirNodeBleManager
 import com.r42914lg.blesandbox.blewrapper.model.DeviceConnectionState
 import com.r42914lg.blesandbox.blewrapper.model.DiscoveredDevice
-import com.r42914lg.blesandbox.blewrapper.model.LedState
-import com.r42914lg.blesandbox.blewrapper.model.TemperatureReading
+import com.r42914lg.blesandbox.coredata.AirNodeRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,6 +26,7 @@ private const val TAG = "DeviceConnectionImpl"
 
 class DeviceConnectionImpl(
     private val context: Context,
+    private val repository: AirNodeRepository,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : DeviceConnection {
 
@@ -35,16 +35,10 @@ class DeviceConnectionImpl(
         bluetoothManager?.adapter
     }
 
-    private val bleManager by lazy { AirNodeBleManager(context) }
+    private val bleManager by lazy { AirNodeBleManager(context, repository, coroutineScope) }
 
     private val _connectionState = MutableStateFlow<DeviceConnectionState>(DeviceConnectionState.Disconnected)
     override val connectionState: StateFlow<DeviceConnectionState> = _connectionState.asStateFlow()
-
-    override val temperatureFlow: StateFlow<TemperatureReading?>
-        get() = bleManager.temperatureFlow
-
-    override val ledStateFlow: StateFlow<LedState>
-        get() = bleManager.ledStateFlow
 
     private val _rssiFlow = MutableStateFlow<Int?>(null)
     override val rssiFlow: StateFlow<Int?> = _rssiFlow.asStateFlow()
@@ -111,11 +105,10 @@ class DeviceConnectionImpl(
                     _connectionState.value = DeviceConnectionState.Disconnected
                 } else if (isDeviceReady) {
                     // signal lost -> update UI to Reconnecting and trigger background auto-connect
-                    val lastTempTimestamp = temperatureFlow.value?.timestampMs
                     _connectionState.value = DeviceConnectionState.Reconnecting(
                         deviceAddress = device.address,
                         deviceName = device.name ?: currentTargetName,
-                        lastReadingTimestampMs = lastTempTimestamp
+                        lastReadingTimestampMs = System.currentTimeMillis()
                     )
                     // reconnect if in range
                     bleManager.connect(device)

@@ -14,6 +14,8 @@ composeBom = "2026.09.00"
 nordicBle = "2.11.0"
 koinVersion = "4.2.2"
 kotlinxCoroutinesCore = "1.11.0"
+room = "2.8.5"
+ksp = "2.1.10-1.0.30"
 
 [libraries]
 android-build-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -32,6 +34,10 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
 nordic-ble = { group = "no.nordicsemi.android", name = "ble", version.ref = "nordicBle" }
 nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
 nordic-ble-common = { group = "no.nordicsemi.android", name = "ble-common", version.ref = "nordicBle" }
@@ -45,3 +51,4 @@ android-application = { id = "android.application", version = "unspecified" }
 android-library = { id = "android.library", version = "unspecified" }
 kotlin-library = { id = "kotlin.library", version = "unspecified" }
 compose-library = { id = "compose.library", version = "unspecified" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

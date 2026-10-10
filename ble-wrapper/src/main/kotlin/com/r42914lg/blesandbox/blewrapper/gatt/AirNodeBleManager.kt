@@ -5,26 +5,23 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
 import android.util.Log
-import com.r42914lg.blesandbox.blewrapper.model.LedState
-import com.r42914lg.blesandbox.blewrapper.model.TemperatureReading
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.r42914lg.blesandbox.coredata.AirNodeRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import no.nordicsemi.android.ble.BleManager
 import no.nordicsemi.android.ble.data.Data
 
 private const val TAG = "AirNodeBleManager"
 
-class AirNodeBleManager(context: Context) : BleManager(context) {
+class AirNodeBleManager(
+    context: Context,
+    private val repository: AirNodeRepository,
+    private val scope: CoroutineScope
+) : BleManager(context) {
 
     private var tempCharacteristic: BluetoothGattCharacteristic? = null
     private var ledCharacteristic: BluetoothGattCharacteristic? = null
-
-    private val _temperatureFlow = MutableStateFlow<TemperatureReading?>(null)
-    val temperatureFlow: StateFlow<TemperatureReading?> = _temperatureFlow.asStateFlow()
-
-    private val _ledStateFlow = MutableStateFlow(LedState())
-    val ledStateFlow: StateFlow<LedState> = _ledStateFlow.asStateFlow()
 
     override fun getGattCallback(): BleManagerGattCallback {
         return object : BleManagerGattCallback() {
@@ -71,7 +68,10 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
             val hundredths = data.getIntValue(Data.FORMAT_SINT16, 2) ?: return
             val tempValue = hundredths.toFloat() / 100.0f
             Log.d(TAG, "Received temperature reading: $tempValue °C (hundredths=$hundredths)")
-            _temperatureFlow.value = TemperatureReading(temperatureCelsius = tempValue)
+
+            scope.launch(Dispatchers.IO) {
+                repository.saveTemperature(temperatureCelsius = tempValue)
+            }
         }
     }
 
@@ -79,32 +79,28 @@ class AirNodeBleManager(context: Context) : BleManager(context) {
         val bytes = data.value ?: return
         if (bytes.isNotEmpty()) {
             val isOn = bytes[0].toInt() != 0
-            val writeVal = if (isOn) "01" else "00"
-            Log.d(TAG, "Read LED state: isOn=$isOn, val=$writeVal")
-            _ledStateFlow.value = LedState(
-                isOn = isOn,
-                lastWriteTimestampMs = System.currentTimeMillis(),
-                lastWriteValue = writeVal
-            )
+            Log.d(TAG, "Read LED state: isOn=$isOn")
+
+            scope.launch(Dispatchers.IO) {
+                repository.saveLedState(isOn = isOn)
+            }
         }
     }
 
     fun setLedState(isOn: Boolean) {
         val char = ledCharacteristic ?: return
         val value = byteArrayOf(if (isOn) 0x01 else 0x00)
-        val hexValue = if (isOn) "01" else "00"
 
         writeCharacteristic(
             char,
             value,
             BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
         ).done {
-            Log.d(TAG, "Successfully wrote LED state: $hexValue")
-            _ledStateFlow.value = LedState(
-                isOn = isOn,
-                lastWriteTimestampMs = System.currentTimeMillis(),
-                lastWriteValue = hexValue
-            )
+            Log.d(TAG, "Successfully wrote LED state: $isOn")
+
+            scope.launch(Dispatchers.IO) {
+                repository.saveLedState(isOn = isOn)
+            }
         }.enqueue()
     }
 }
