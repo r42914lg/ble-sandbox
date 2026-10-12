@@ -18,4 +18,7 @@ interface TemperatureDao {
 
     @Query("SELECT * FROM temperature_readings ORDER BY timestampMs DESC")
     fun observeAll(): Flow<List<TemperatureEntity>>
+
+    @Query("DELETE FROM temperature_readings WHERE timestampMs < :cutoffTimestampMs")
+    suspend fun deleteOlderThan(cutoffTimestampMs: Long): Int
 }

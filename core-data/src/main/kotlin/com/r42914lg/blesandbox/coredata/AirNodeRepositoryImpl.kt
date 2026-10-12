@@ -31,6 +31,11 @@ class AirNodeRepositoryImpl(
         ledStateDao.insert(entity)
     }
 
+    override suspend fun deleteTemperaturesOlderThan(cutoffMs: Long): Int {
+        val cutoffTimestamp = System.currentTimeMillis() - cutoffMs
+        return temperatureDao.deleteOlderThan(cutoffTimestamp)
+    }
+
     override fun observeLatestTemperature(): Flow<TemperatureRecord?> {
         return temperatureDao.observeLatest().map { it?.toRecord() }
     }
