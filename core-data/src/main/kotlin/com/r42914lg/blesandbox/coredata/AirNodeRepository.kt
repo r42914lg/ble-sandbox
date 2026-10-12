@@ -17,7 +17,11 @@ interface AirNodeRepository {
 
     fun observeLatestTemperature(): Flow<TemperatureRecord?>
 
-    fun observeAllTemperatures(): Flow<List<TemperatureRecord>>
+    fun observeMinuteTemperatures(): Flow<List<TemperatureRecord>>
+
+    fun observe10MinuteTemperatures(): Flow<List<TemperatureRecord>>
+
+    fun observeHourTemperatures(): Flow<List<TemperatureRecord>>
 
     fun observeLedState(): Flow<LedStateRecord?>
 }

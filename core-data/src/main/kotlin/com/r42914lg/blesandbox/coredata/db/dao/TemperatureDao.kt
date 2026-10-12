@@ -16,8 +16,20 @@ interface TemperatureDao {
     @Query("SELECT * FROM temperature_readings ORDER BY timestampMs DESC LIMIT 1")
     fun observeLatest(): Flow<TemperatureEntity?>
 
-    @Query("SELECT * FROM temperature_readings ORDER BY timestampMs DESC")
-    fun observeAll(): Flow<List<TemperatureEntity>>
+    @Query("SELECT * FROM temperature_readings WHERE timestampMs >= :startTimeMs ORDER BY timestampMs ASC")
+    fun observeTemperaturesSince(startTimeMs: Long): Flow<List<TemperatureEntity>>
+
+    @Query("""
+        SELECT 
+            CAST(AVG(id) AS INTEGER) AS id,
+            CAST(AVG(temperatureCelsius) AS REAL) AS temperatureCelsius,
+            CAST(AVG(timestampMs) AS INTEGER) AS timestampMs
+        FROM temperature_readings
+        WHERE timestampMs >= :startTimeMs
+        GROUP BY (timestampMs / :bucketSizeMs)
+        ORDER BY timestampMs ASC
+    """)
+    fun observeDownsampledTemperatures(startTimeMs: Long, bucketSizeMs: Long): Flow<List<TemperatureEntity>>
 
     @Query("DELETE FROM temperature_readings WHERE timestampMs < :cutoffTimestampMs")
     suspend fun deleteOlderThan(cutoffTimestampMs: Long): Int

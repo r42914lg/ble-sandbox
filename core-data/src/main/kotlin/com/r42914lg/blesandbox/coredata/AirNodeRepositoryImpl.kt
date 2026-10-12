@@ -7,7 +7,10 @@ import com.r42914lg.blesandbox.coredata.db.entity.TemperatureEntity
 import com.r42914lg.blesandbox.coredata.model.LedStateRecord
 import com.r42914lg.blesandbox.coredata.model.TemperatureRecord
 import com.r42914lg.blesandbox.coredata.model.toRecordList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class AirNodeRepositoryImpl(
@@ -40,8 +43,30 @@ class AirNodeRepositoryImpl(
         return temperatureDao.observeLatest().map { it?.toRecord() }
     }
 
-    override fun observeAllTemperatures(): Flow<List<TemperatureRecord>> {
-        return temperatureDao.observeAll().map { it.toRecordList() }
+    override fun observeMinuteTemperatures(): Flow<List<TemperatureRecord>> {
+        val startTimeMs = System.currentTimeMillis() - 60_000L
+        return temperatureDao.observeTemperaturesSince(startTimeMs)
+            .map { it.toRecordList() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.Default)
+    }
+
+    override fun observe10MinuteTemperatures(): Flow<List<TemperatureRecord>> {
+        val startTimeMs = System.currentTimeMillis() - 600_000L
+        val bucketSizeMs = 10_000L
+        return temperatureDao.observeDownsampledTemperatures(startTimeMs, bucketSizeMs)
+            .map { it.toRecordList() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.Default)
+    }
+
+    override fun observeHourTemperatures(): Flow<List<TemperatureRecord>> {
+        val startTimeMs = System.currentTimeMillis() - 3_600_000L
+        val bucketSizeMs = 60_000L
+        return temperatureDao.observeDownsampledTemperatures(startTimeMs, bucketSizeMs)
+            .map { it.toRecordList() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.Default)
     }
 
     override fun observeLedState(): Flow<LedStateRecord?> {

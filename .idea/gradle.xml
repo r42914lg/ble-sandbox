@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention-plugins" />
             <option value="$PROJECT_DIR$/core-data" />
+            <option value="$PROJECT_DIR$/temp-graph" />
           </set>
         </option>
       </GradleProjectSettings>

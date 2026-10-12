@@ -54,6 +54,7 @@ import com.r42914lg.blesandbox.mvi.MainContentState
 import com.r42914lg.blesandbox.mvi.MainScreenAction
 import com.r42914lg.blesandbox.mvi.MainUiState
 import com.r42914lg.blesandbox.mvi.MainViewModel
+import com.r42914lg.blesandbox.tempgraph.TempGraphWidget
 import org.koin.androidx.compose.koinViewModel
 
 val TealAccent = Color(0xFF0B7A85)
@@ -331,6 +332,8 @@ fun ActiveDeviceView(
                 }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+            TempGraphWidget()
             Spacer(modifier = Modifier.height(16.dp))
 
             Card(

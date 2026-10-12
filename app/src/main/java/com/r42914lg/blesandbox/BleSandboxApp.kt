@@ -7,6 +7,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.r42914lg.blesandbox.blewrapper.di.BleInitializer
 import com.r42914lg.blesandbox.coredata.di.CoreDataInitializer
+import com.r42914lg.blesandbox.tempgraph.di.TempGraphInitializer
 import com.r42914lg.blesandbox.worker.CleanupTemperatureWorker
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.loadKoinModules
@@ -31,7 +32,8 @@ class BleSandboxApp : Application(), CoreApp {
                 listOf(
                     AppInitializer().module,
                     BleInitializer().module,
-                    CoreDataInitializer().module
+                    CoreDataInitializer().module,
+                    TempGraphInitializer().module
                 )
             )
         }
