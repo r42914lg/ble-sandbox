@@ -118,9 +118,15 @@ void loop() {
     }
     lastSampleAt = now;
 
-    // Fake temperature: 15.00 to 25.00, with a 60-second period.
+    // Default sine wave: 15.00 to 25.00 °C with a 60-second period.
     const double phase = (2.0 * PI * static_cast<double>(sampleIndex % 60)) / 60.0;
-    const int16_t hundredths = static_cast<int16_t>(lround(2000.0 + 500.0 * sin(phase)));
+    int16_t hundredths = static_cast<int16_t>(lround(2000.0 + 500.0 * sin(phase)));
+
+    // Once every 5 minutes (300 seconds), produce a 31.00 °C spike for 5 seconds.
+    if (sampleIndex % 300 < 5) {
+        hundredths = 3100; // 31.00 °C
+    }
+
     ++sampleIndex;
     ++sequenceNumber;  // uint16_t wraps naturally after 65535.
     writeReading(hundredths);

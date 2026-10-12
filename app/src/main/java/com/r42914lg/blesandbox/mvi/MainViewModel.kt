@@ -1,6 +1,9 @@
 package com.r42914lg.blesandbox.mvi
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.r42914lg.blesandbox.PermissionUtils
@@ -8,6 +11,7 @@ import com.r42914lg.blesandbox.blewrapper.DeviceConnection
 import com.r42914lg.blesandbox.blewrapper.model.DeviceConnectionState
 import com.r42914lg.blesandbox.coredata.AirNodeRepository
 import com.r42914lg.blesandbox.coredata.model.LedStateRecord
+import com.r42914lg.blesandbox.service.AirNodeForegroundService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +32,7 @@ data class ReadinessState(
 class MainViewModel(
     private val deviceConnection: DeviceConnection,
     private val repository: AirNodeRepository,
-    context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val readinessFlow = MutableStateFlow(
@@ -116,10 +120,22 @@ class MainViewModel(
             is MainScreenAction.ConnectToDevice -> {
                 sheetExplicitOpenFlow.value = false
                 deviceConnection.connect(action.address, action.name)
+                try {
+                    val intent = Intent(context, AirNodeForegroundService::class.java)
+                    ContextCompat.startForegroundService(context, intent)
+                } catch (e: Exception) {
+                    Log.e("MainViewModel", "Failed to start foreground service", e)
+                }
             }
             MainScreenAction.Disconnect -> {
                 deviceConnection.disconnect()
                 sheetExplicitOpenFlow.value = true
+                try {
+                    val intent = Intent(context, AirNodeForegroundService::class.java)
+                    context.stopService(intent)
+                } catch (e: Exception) {
+                    Log.e("MainViewModel", "Failed to stop foreground service", e)
+                }
             }
             is MainScreenAction.ToggleLed -> deviceConnection.setLedState(action.isOn)
             MainScreenAction.RetryConnection -> deviceConnection.retryConnection()
