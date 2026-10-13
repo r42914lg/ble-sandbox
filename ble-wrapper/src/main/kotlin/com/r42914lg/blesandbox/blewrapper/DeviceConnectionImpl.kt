@@ -24,7 +24,7 @@ import no.nordicsemi.android.ble.observer.ConnectionObserver
 
 private const val TAG = "DeviceConnectionImpl"
 
-class DeviceConnectionImpl(
+internal class DeviceConnectionImpl(
     private val context: Context,
     private val repository: AirNodeRepository,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())

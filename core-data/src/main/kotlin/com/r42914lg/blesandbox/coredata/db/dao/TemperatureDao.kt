@@ -8,7 +8,7 @@ import com.r42914lg.blesandbox.coredata.db.entity.TemperatureEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface TemperatureDao {
+internal interface TemperatureDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: TemperatureEntity)

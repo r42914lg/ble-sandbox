@@ -10,7 +10,7 @@ import org.koin.core.component.inject
 
 private const val TAG = "CleanupTempWorker"
 
-class CleanupTemperatureWorker(
+internal class CleanupTemperatureWorker(
     appContext: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(appContext, workerParams), KoinComponent {

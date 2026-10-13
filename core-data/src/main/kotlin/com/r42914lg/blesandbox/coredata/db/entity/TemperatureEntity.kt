@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.r42914lg.blesandbox.coredata.model.TemperatureRecord
 
 @Entity(tableName = "temperature_readings")
-data class TemperatureEntity(
+internal data class TemperatureEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val temperatureCelsius: Float,
     val timestampMs: Long

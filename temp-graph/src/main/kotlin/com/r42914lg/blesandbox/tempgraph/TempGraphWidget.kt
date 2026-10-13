@@ -51,7 +51,7 @@ fun TempGraphWidget(
 }
 
 @Composable
-fun TempGraphWidgetContent(
+internal fun TempGraphWidgetContent(
     uiState: TempGraphUiState,
     onSelectWindow: (TimeWindow) -> Unit,
     modifier: Modifier = Modifier

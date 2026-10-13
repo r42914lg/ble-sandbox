@@ -47,12 +47,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.r42914lg.blesandbox.R
 import com.r42914lg.blesandbox.blewrapper.model.DiscoveredDevice
+import com.r42914lg.blesandbox.designsystem.NeutralLine
+import com.r42914lg.blesandbox.designsystem.TealAccent
+import com.r42914lg.blesandbox.designsystem.TealSoft
 import com.r42914lg.blesandbox.mvi.BottomSheetState
 
 @SuppressLint("ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AirNodeBottomSheet(
+internal fun AirNodeBottomSheet(
     bottomSheetState: BottomSheetState,
     onDismiss: () -> Unit,
     onSelectDevice: (String, String?) -> Unit,
@@ -123,7 +126,7 @@ fun AirNodeBottomSheet(
 }
 
 @Composable
-fun SetupSheetContent(
+internal fun SetupSheetContent(
     state: BottomSheetState.SetupRequired,
     onRequestPermissions: () -> Unit,
     onEnableLocation: () -> Unit,
@@ -174,7 +177,7 @@ fun SetupSheetContent(
 }
 
 @Composable
-fun SetupRow(isDone: Boolean, label: String, doneLabel: String, onClick: () -> Unit) {
+internal fun SetupRow(isDone: Boolean, label: String, doneLabel: String, onClick: () -> Unit) {
     if (isDone) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -208,7 +211,7 @@ fun SetupRow(isDone: Boolean, label: String, doneLabel: String, onClick: () -> U
 }
 
 @Composable
-fun CheckIcon(color: Color) {
+internal fun CheckIcon(color: Color) {
     Canvas(modifier = Modifier.size(18.dp)) {
         val path = Path().apply {
             moveTo(size.width * 0.2f, size.height * 0.5f)
@@ -224,7 +227,7 @@ fun CheckIcon(color: Color) {
 }
 
 @Composable
-fun DevicePickerSheetContent(
+internal fun DevicePickerSheetContent(
     devices: List<DiscoveredDevice>,
     onSelectDevice: (String, String?) -> Unit
 ) {
@@ -267,7 +270,7 @@ fun DevicePickerSheetContent(
 }
 
 @Composable
-fun DeviceRowItem(device: DiscoveredDevice, onSelect: (String, String?) -> Unit) {
+internal fun DeviceRowItem(device: DiscoveredDevice, onSelect: (String, String?) -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -318,7 +321,7 @@ fun DeviceRowItem(device: DiscoveredDevice, onSelect: (String, String?) -> Unit)
 }
 
 @Composable
-fun RssiSignalBars(rssi: Int) {
+internal fun RssiSignalBars(rssi: Int) {
     val level = when {
         rssi > -60 -> 4
         rssi > -70 -> 3

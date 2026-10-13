@@ -36,6 +36,7 @@ dependencies {
     implementation(project(":ble-wrapper"))
     implementation(project(":core-data"))
     implementation(project(":temp-graph"))
+    implementation(project(":desygn-sys"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

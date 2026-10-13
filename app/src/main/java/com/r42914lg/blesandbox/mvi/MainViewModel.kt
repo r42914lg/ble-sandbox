@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
-data class ReadinessState(
+internal data class ReadinessState(
     val isPermissionsGranted: Boolean = false,
     val isLocationEnabled: Boolean = true,
     val isBluetoothEnabled: Boolean = false
@@ -29,7 +29,7 @@ data class ReadinessState(
         get() = isPermissionsGranted && isLocationEnabled && isBluetoothEnabled
 }
 
-class MainViewModel(
+internal class MainViewModel(
     private val deviceConnection: DeviceConnection,
     private val repository: AirNodeRepository,
     private val context: Context

@@ -8,7 +8,7 @@ import com.r42914lg.blesandbox.coredata.db.entity.LedStateEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface LedStateDao {
+internal interface LedStateDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: LedStateEntity)

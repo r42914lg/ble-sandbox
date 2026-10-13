@@ -33,10 +33,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.r42914lg.blesandbox.R
+import com.r42914lg.blesandbox.designsystem.BadRed
+import com.r42914lg.blesandbox.designsystem.BadRedSoft
+import com.r42914lg.blesandbox.designsystem.TealAccent
+import com.r42914lg.blesandbox.designsystem.TealSoft
+import com.r42914lg.blesandbox.designsystem.WarnAmber
+import com.r42914lg.blesandbox.designsystem.WarnAmberSoft
 import com.r42914lg.blesandbox.mvi.MainContentState
 
 @Composable
-fun TopHeaderBar(contentState: MainContentState) {
+internal fun TopHeaderBar(contentState: MainContentState) {
     val defaultTitle = stringResource(R.string.app_title)
     val title = when (contentState) {
         is MainContentState.Connected -> contentState.deviceName
@@ -84,7 +90,7 @@ fun TopHeaderBar(contentState: MainContentState) {
 }
 
 @Composable
-fun StatusPill(text: String, textColor: Color, bgColor: Color, isPulsing: Boolean) {
+internal fun StatusPill(text: String, textColor: Color, bgColor: Color, isPulsing: Boolean) {
     Surface(
         color = bgColor,
         shape = RoundedCornerShape(99.dp),
@@ -109,7 +115,7 @@ fun StatusPill(text: String, textColor: Color, bgColor: Color, isPulsing: Boolea
 }
 
 @Composable
-fun PulsingDot(color: Color) {
+internal fun PulsingDot(color: Color) {
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.35f,

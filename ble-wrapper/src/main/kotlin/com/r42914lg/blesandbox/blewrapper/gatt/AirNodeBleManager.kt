@@ -14,7 +14,7 @@ import no.nordicsemi.android.ble.data.Data
 
 private const val TAG = "AirNodeBleManager"
 
-class AirNodeBleManager(
+internal class AirNodeBleManager(
     context: Context,
     private val repository: AirNodeRepository,
     private val scope: CoroutineScope

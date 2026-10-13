@@ -32,7 +32,7 @@ private const val ALERT_NOTIFICATION_ID = 1002
 
 private const val TEMP_ALERT_THRESHOLD = 30.0f
 
-class AirNodeForegroundService : Service() {
+internal class AirNodeForegroundService : Service() {
 
     private val deviceConnection: DeviceConnection by inject()
     private val repository: AirNodeRepository by inject()

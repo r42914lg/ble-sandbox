@@ -51,6 +51,11 @@ import com.r42914lg.blesandbox.PermissionUtils
 import com.r42914lg.blesandbox.R
 import com.r42914lg.blesandbox.coredata.model.LedStateRecord
 import com.r42914lg.blesandbox.coredata.model.TemperatureRecord
+import com.r42914lg.blesandbox.designsystem.BadRed
+import com.r42914lg.blesandbox.designsystem.BadRedSoft
+import com.r42914lg.blesandbox.designsystem.NeutralLine
+import com.r42914lg.blesandbox.designsystem.TealAccent
+import com.r42914lg.blesandbox.designsystem.WarnAmber
 import com.r42914lg.blesandbox.mvi.BottomSheetState
 import com.r42914lg.blesandbox.mvi.MainContentState
 import com.r42914lg.blesandbox.mvi.MainScreenAction
@@ -58,14 +63,6 @@ import com.r42914lg.blesandbox.mvi.MainUiState
 import com.r42914lg.blesandbox.mvi.MainViewModel
 import com.r42914lg.blesandbox.tempgraph.TempGraphWidget
 import org.koin.androidx.compose.koinViewModel
-
-val TealAccent = Color(0xFF0B7A85)
-val TealSoft = Color(0xFFD6EEF0)
-val WarnAmber = Color(0xFF9A5B00)
-val WarnAmberSoft = Color(0xFFFFF8E1)
-val BadRed = Color(0xFFB3261E)
-val BadRedSoft = Color(0xFFFADFDC)
-val NeutralLine = Color(0xFFD3DBE2)
 
 @Composable
 fun MainScreen() {
@@ -125,7 +122,7 @@ fun MainScreen() {
 }
 
 @Composable
-fun MainScreenContent(
+internal fun MainScreenContent(
     uiState: MainUiState,
     onOpenSheet: () -> Unit,
     onCloseSheet: () -> Unit,
@@ -226,7 +223,7 @@ fun MainScreenContent(
 }
 
 @Composable
-fun EmptyStateView(onOpenSheet: () -> Unit) {
+internal fun EmptyStateView(onOpenSheet: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -254,7 +251,7 @@ fun EmptyStateView(onOpenSheet: () -> Unit) {
 }
 
 @Composable
-fun ActiveDeviceView(
+internal fun ActiveDeviceView(
     deviceName: String,
     deviceAddress: String,
     temperature: TemperatureRecord?,
@@ -396,7 +393,7 @@ fun ActiveDeviceView(
 }
 
 @Composable
-fun ErrorStateView(
+internal fun ErrorStateView(
     message: String,
     onRetry: () -> Unit,
     onOpenSheet: () -> Unit

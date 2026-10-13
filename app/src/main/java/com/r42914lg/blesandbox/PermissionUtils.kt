@@ -13,7 +13,7 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-object PermissionUtils {
+internal object PermissionUtils {
 
     /**
      * Returns runtime permissions required for BLE scanning, connecting, and foreground notifications.

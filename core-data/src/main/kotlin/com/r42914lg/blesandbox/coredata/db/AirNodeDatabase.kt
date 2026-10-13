@@ -12,7 +12,7 @@ import com.r42914lg.blesandbox.coredata.db.entity.TemperatureEntity
     version = 1,
     exportSchema = false
 )
-abstract class AirNodeDatabase : RoomDatabase() {
+internal abstract class AirNodeDatabase : RoomDatabase() {
     abstract fun temperatureDao(): TemperatureDao
     abstract fun ledStateDao(): LedStateDao
 }

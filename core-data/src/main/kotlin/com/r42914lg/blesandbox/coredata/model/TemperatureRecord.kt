@@ -8,4 +8,4 @@ data class TemperatureRecord(
     val timestampMs: Long
 )
 
-fun List<TemperatureEntity>.toRecordList(): List<TemperatureRecord> = map { it.toRecord() }
+internal fun List<TemperatureEntity>.toRecordList(): List<TemperatureRecord> = map { it.toRecord() }
