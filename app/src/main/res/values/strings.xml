@@ -1,3 +1,67 @@
 <resources>
     <string name="app_name">Ble Sandbox</string>
+    <string name="app_title">AirNode</string>
+
+    <!-- Header Status -->
+    <string name="status_disconnected">DISCONNECTED</string>
+    <string name="status_connecting">CONNECTING</string>
+    <string name="status_connected">CONNECTED</string>
+    <string name="status_reconnecting">RECONNECTING</string>
+    <string name="status_error">ERROR</string>
+
+    <!-- Empty State -->
+    <string name="empty_state_title">No device yet</string>
+    <string name="empty_state_subtitle">Choose the AirNode you want to read.</string>
+    <string name="empty_state_button">Choose device</string>
+
+    <!-- Active Device Card -->
+    <string name="temperature_label">TEMPERATURE</string>
+    <string name="celsius_unit">°C</string>
+    <string name="connecting_to">Connecting to %1$s...</string>
+    <string name="connection_lost_note">Connection lost. Last reading available.</string>
+    <string name="updates_note">Updates every second</string>
+    <string name="onboard_led_title">Onboard LED</string>
+    <string name="gpio_info">GPIO 8 · %1$s</string>
+    <string name="last_write_format">last write %1$s</string>
+    <string name="no_write_yet">no write yet</string>
+    <string name="change_device">Change device</string>
+
+    <!-- Error State -->
+    <string name="error_title">Couldn’t connect</string>
+    <string name="try_again">Try again</string>
+    <string name="choose_another_device">Choose another device</string>
+
+    <!-- Setup & Permission Sheet -->
+    <string name="setup_title">Find your AirNode</string>
+    <string name="setup_subtitle">AirNode needs permission to find nearby devices, and Bluetooth turned on. It does not use your location.</string>
+    <string name="allow_nearby_devices">Allow nearby devices</string>
+    <string name="nearby_devices_allowed">Nearby devices allowed</string>
+    <string name="enable_bluetooth">Enable Bluetooth</string>
+    <string name="bluetooth_is_on">Bluetooth is on</string>
+    <string name="enable_location">Enable Location Services</string>
+    <string name="location_is_on">Location is on</string>
+
+    <!-- Device Picker Sheet -->
+    <string name="picker_title">Pick your AirNode</string>
+    <string name="picker_subtitle">Scanning for AirNode devices</string>
+    <string name="picker_looking">Looking for devices nearby...</string>
+    <string name="connect_button">Connect</string>
+
+    <!-- Foreground Service & Notifications -->
+    <string name="channel_status_name">AirNode Status</string>
+    <string name="channel_status_desc">Shows live temperature and connection status for AirNode</string>
+    <string name="channel_alerts_name">AirNode Temperature Alerts</string>
+    <string name="channel_alerts_desc">Triggers high-priority heads-up warnings when temperature exceeds 30°C</string>
+    <string name="service_active_title">AirNode Active</string>
+    <string name="service_connecting">Connecting...</string>
+    <string name="reconnecting_status">%1$s (Reconnecting)</string>
+    <string name="signal_lost_reconnecting">Signal lost. Reconnecting...</string>
+    <string name="led_on">LED: ON</string>
+    <string name="led_off">LED: OFF</string>
+    <string name="alert_title">🚨 High Temperature Alert!</string>
+    <string name="alert_content">AirNode temperature is %1$.1f °C (exceeds 30.0 °C threshold)</string>
+
+    <!-- Graph Widget -->
+    <string name="history_trend_title">History Trend</string>
+    <string name="collecting_temp_data">Collecting temperature data...</string>
 </resources>

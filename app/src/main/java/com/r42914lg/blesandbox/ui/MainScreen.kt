@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.r42914lg.blesandbox.PermissionUtils
+import com.r42914lg.blesandbox.R
 import com.r42914lg.blesandbox.coredata.model.LedStateRecord
 import com.r42914lg.blesandbox.coredata.model.TemperatureRecord
 import com.r42914lg.blesandbox.mvi.BottomSheetState
@@ -231,13 +233,13 @@ fun EmptyStateView(onOpenSheet: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "No device yet",
+            text = stringResource(R.string.empty_state_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Choose the AirNode you want to read.",
+            text = stringResource(R.string.empty_state_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -246,7 +248,7 @@ fun EmptyStateView(onOpenSheet: () -> Unit) {
             onClick = onOpenSheet,
             colors = ButtonDefaults.buttonColors(containerColor = TealAccent)
         ) {
-            Text(text = "Choose device", color = Color.White)
+            Text(text = stringResource(R.string.empty_state_button), color = Color.White)
         }
     }
 }
@@ -285,7 +287,7 @@ fun ActiveDeviceView(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "TEMPERATURE",
+                            text = stringResource(R.string.temperature_label),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -309,7 +311,7 @@ fun ActiveDeviceView(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "°C",
+                            text = stringResource(R.string.celsius_unit),
                             fontSize = 24.sp,
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -320,9 +322,9 @@ fun ActiveDeviceView(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     val noteText = when {
-                        isConnecting -> "Connecting to $deviceName..."
-                        isReconnecting -> "Connection lost. Last reading available."
-                        else -> "Updates every second"
+                        isConnecting -> stringResource(R.string.connecting_to, deviceName)
+                        isReconnecting -> stringResource(R.string.connection_lost_note)
+                        else -> stringResource(R.string.updates_note)
                     }
                     Text(
                         text = noteText,
@@ -333,7 +335,9 @@ fun ActiveDeviceView(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
             TempGraphWidget()
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Card(
@@ -351,14 +355,15 @@ fun ActiveDeviceView(
                 ) {
                     Column {
                         Text(
-                            text = "Onboard LED",
+                            text = stringResource(R.string.onboard_led_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        val lastWriteText = ledState.lastWriteValue?.let { "last write $it" } ?: "no write yet"
+                        val lastWriteText = ledState.lastWriteValue?.let { stringResource(R.string.last_write_format, it) }
+                            ?: stringResource(R.string.no_write_yet)
                         Text(
-                            text = "GPIO 8 · $lastWriteText",
+                            text = stringResource(R.string.gpio_info, lastWriteText),
                             fontSize = 11.sp,
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -385,7 +390,7 @@ fun ActiveDeviceView(
                 .padding(bottom = 16.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(text = "Change device", color = MaterialTheme.colorScheme.onSurface)
+            Text(text = stringResource(R.string.change_device), color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
@@ -408,7 +413,7 @@ fun ErrorStateView(
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
-                    text = "Couldn’t connect",
+                    text = stringResource(R.string.error_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = BadRed
@@ -425,14 +430,14 @@ fun ErrorStateView(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = TealAccent)
                 ) {
-                    Text(text = "Try again", color = Color.White)
+                    Text(text = stringResource(R.string.try_again), color = Color.White)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
                     onClick = onOpenSheet,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Choose another device", color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = stringResource(R.string.choose_another_device), color = MaterialTheme.colorScheme.onSurface)
                 }
             }
         }

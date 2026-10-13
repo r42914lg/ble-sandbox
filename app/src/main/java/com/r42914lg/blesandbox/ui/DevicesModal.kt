@@ -40,10 +40,12 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.r42914lg.blesandbox.R
 import com.r42914lg.blesandbox.blewrapper.model.DiscoveredDevice
 import com.r42914lg.blesandbox.mvi.BottomSheetState
 
@@ -129,13 +131,13 @@ fun SetupSheetContent(
 ) {
     Column {
         Text(
-            text = "Find your AirNode",
+            text = stringResource(R.string.setup_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "AirNode needs permission to find nearby devices, and Bluetooth turned on. It does not use your location.",
+            text = stringResource(R.string.setup_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -143,8 +145,8 @@ fun SetupSheetContent(
 
         SetupRow(
             isDone = state.isPermissionsGranted,
-            label = "Allow nearby devices",
-            doneLabel = "Nearby devices allowed",
+            label = stringResource(R.string.allow_nearby_devices),
+            doneLabel = stringResource(R.string.nearby_devices_allowed),
             onClick = onRequestPermissions
         )
 
@@ -152,8 +154,8 @@ fun SetupSheetContent(
 
         SetupRow(
             isDone = state.isBluetoothEnabled,
-            label = "Enable Bluetooth",
-            doneLabel = "Bluetooth is on",
+            label = stringResource(R.string.enable_bluetooth),
+            doneLabel = stringResource(R.string.bluetooth_is_on),
             onClick = onEnableBluetooth
         )
 
@@ -161,8 +163,8 @@ fun SetupSheetContent(
             Spacer(modifier = Modifier.height(12.dp))
             SetupRow(
                 isDone = state.isLocationEnabled,
-                label = "Enable Location Services",
-                doneLabel = "Location is on",
+                label = stringResource(R.string.enable_location),
+                doneLabel = stringResource(R.string.location_is_on),
                 onClick = onEnableLocation
             )
         }
@@ -228,7 +230,7 @@ fun DevicePickerSheetContent(
 ) {
     Column {
         Text(
-            text = "Pick your AirNode",
+            text = stringResource(R.string.picker_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
@@ -237,7 +239,7 @@ fun DevicePickerSheetContent(
             PulsingDot(color = TealAccent)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Scanning for AirNode devices",
+                text = stringResource(R.string.picker_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -247,7 +249,7 @@ fun DevicePickerSheetContent(
 
         if (devices.isEmpty()) {
             Text(
-                text = "Looking for devices nearby...",
+                text = stringResource(R.string.picker_looking),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(vertical = 24.dp)
@@ -304,7 +306,7 @@ fun DeviceRowItem(device: DiscoveredDevice, onSelect: (String, String?) -> Unit)
                 shape = RoundedCornerShape(99.dp)
             ) {
                 Text(
-                    text = "Connect",
+                    text = stringResource(R.string.connect_button),
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,

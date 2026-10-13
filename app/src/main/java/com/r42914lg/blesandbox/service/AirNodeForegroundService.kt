@@ -61,8 +61,8 @@ class AirNodeForegroundService : Service() {
                     is DeviceConnectionState.Reconnecting -> {
                         if (!isForegroundStarted) {
                             startForegroundServiceInternal(
-                                title = "AirNode Active",
-                                content = "Connecting..."
+                                title = getString(R.string.service_active_title),
+                                content = getString(R.string.service_connecting)
                             )
                         }
                     }
@@ -88,17 +88,21 @@ class AirNodeForegroundService : Service() {
                 Triple(connState, temp, led)
             }.collect { (connState, temp, led) ->
                 if (isForegroundStarted && connState is DeviceConnectionState.Connected) {
-                    val deviceName = connState.deviceName ?: "AirNode"
+                    val defaultTitle = getString(R.string.app_title)
+                    val deviceName = connState.deviceName ?: defaultTitle
                     val currentTemp = temp?.temperatureCelsius ?: 0.0f
                     val tempText = temp?.let { "%.1f °C".format(it.temperatureCelsius) } ?: "--.- °C"
-                    val ledText = if (led?.isOn == true) "LED: ON" else "LED: OFF"
+                    val ledText = if (led?.isOn == true) getString(R.string.led_on) else getString(R.string.led_off)
                     val content = "$tempText · $ledText"
 
                     updateNotification(title = deviceName, content = content)
                     checkTemperatureAlert(currentTemp)
                 } else if (isForegroundStarted && connState is DeviceConnectionState.Reconnecting) {
-                    val deviceName = connState.deviceName ?: "AirNode"
-                    updateNotification(title = "$deviceName (Reconnecting)", content = "Signal lost. Reconnecting...")
+                    val defaultTitle = getString(R.string.app_title)
+                    val deviceName = connState.deviceName ?: defaultTitle
+                    val titleText = getString(R.string.reconnecting_status, deviceName)
+                    val contentText = getString(R.string.signal_lost_reconnecting)
+                    updateNotification(title = titleText, content = contentText)
                 }
             }
         }
@@ -170,8 +174,8 @@ class AirNodeForegroundService : Service() {
         )
 
         return NotificationCompat.Builder(this, ALERT_CHANNEL_ID)
-            .setContentTitle("🚨 High Temperature Alert!")
-            .setContentText("AirNode temperature is %.1f °C (exceeds 30.0 °C threshold)".format(tempCelsius))
+            .setContentTitle(getString(R.string.alert_title))
+            .setContentText(getString(R.string.alert_content, tempCelsius))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -187,10 +191,10 @@ class AirNodeForegroundService : Service() {
         // 1. Status channel for live background monitoring
         val statusChannel = NotificationChannel(
             CHANNEL_ID,
-            "AirNode Status",
+            getString(R.string.channel_status_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "Shows live temperature and connection status for AirNode"
+            description = getString(R.string.channel_status_desc)
             setShowBadge(false)
         }
         manager.createNotificationChannel(statusChannel)
@@ -198,10 +202,10 @@ class AirNodeForegroundService : Service() {
         // 2. High-priority alert channel for temperature warnings (> 30°C)
         val alertChannel = NotificationChannel(
             ALERT_CHANNEL_ID,
-            "AirNode Temperature Alerts",
+            getString(R.string.channel_alerts_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "Triggers high-priority heads-up warnings when temperature exceeds 30°C"
+            description = getString(R.string.channel_alerts_desc)
             enableVibration(true)
             setShowBadge(true)
         }

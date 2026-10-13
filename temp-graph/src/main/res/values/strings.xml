@@ -1,0 +1,4 @@
+<resources>
+    <string name="history_trend_title">History Trend</string>
+    <string name="collecting_temp_data">Collecting temperature data...</string>
+</resources>

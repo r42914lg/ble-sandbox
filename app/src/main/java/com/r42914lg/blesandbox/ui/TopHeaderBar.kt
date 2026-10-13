@@ -27,28 +27,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.r42914lg.blesandbox.R
 import com.r42914lg.blesandbox.mvi.MainContentState
 
 @Composable
 fun TopHeaderBar(contentState: MainContentState) {
+    val defaultTitle = stringResource(R.string.app_title)
     val title = when (contentState) {
         is MainContentState.Connected -> contentState.deviceName
         is MainContentState.Connecting -> contentState.deviceName
         is MainContentState.Reconnecting -> contentState.deviceName
-        is MainContentState.Error -> contentState.deviceAddress ?: "AirNode"
-        MainContentState.NoDevice -> "AirNode"
+        is MainContentState.Error -> contentState.deviceAddress ?: defaultTitle
+        MainContentState.NoDevice -> defaultTitle
     }
 
     val subtitle = when (contentState) {
         is MainContentState.Connected -> contentState.deviceAddress
         is MainContentState.Connecting -> contentState.deviceAddress
         is MainContentState.Reconnecting -> contentState.deviceAddress
-        is MainContentState.Error -> "Connection error"
-        MainContentState.NoDevice -> "No device selected"
+        is MainContentState.Error -> stringResource(R.string.status_error)
+        MainContentState.NoDevice -> stringResource(R.string.empty_state_title)
     }
 
     Row(
@@ -71,10 +74,10 @@ fun TopHeaderBar(contentState: MainContentState) {
         }
 
         when (contentState) {
-            is MainContentState.Connected -> StatusPill("Connected", TealAccent, TealSoft, isPulsing = false)
-            is MainContentState.Connecting -> StatusPill("Connecting", Color.Gray, Color(0xFFEEEEEE), isPulsing = true)
-            is MainContentState.Reconnecting -> StatusPill("Reconnecting", WarnAmber, WarnAmberSoft, isPulsing = true)
-            is MainContentState.Error -> StatusPill("Failed", BadRed, BadRedSoft, isPulsing = false)
+            is MainContentState.Connected -> StatusPill(stringResource(R.string.status_connected), TealAccent, TealSoft, isPulsing = false)
+            is MainContentState.Connecting -> StatusPill(stringResource(R.string.status_connecting), Color.Gray, Color(0xFFEEEEEE), isPulsing = true)
+            is MainContentState.Reconnecting -> StatusPill(stringResource(R.string.status_reconnecting), WarnAmber, WarnAmberSoft, isPulsing = true)
+            is MainContentState.Error -> StatusPill(stringResource(R.string.status_error), BadRed, BadRedSoft, isPulsing = false)
             MainContentState.NoDevice -> {}
         }
     }
