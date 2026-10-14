@@ -23,7 +23,7 @@ android {
 
 dependencies {
     implementation(project(":core-data"))
-    implementation(project(":desygn-sys"))
+    implementation(project(":design-sys"))
 
     implementation(libs.kotlinx.coroutines.core)
 
